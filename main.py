@@ -1,5 +1,5 @@
-
 from telethon import TelegramClient, events
+from telethon.sessions import StringSession
 import os
 
 api_id = int(os.environ.get("API_ID"))
@@ -16,9 +16,7 @@ async def handler(event):
     if event.is_group or event.is_channel:
         msg = event.message.message.lower()
         if any(keyword in msg for keyword in KEYWORDS):
-            await client.send_message(owner_username, f"👀 Вакансия:
-
-{event.message.message}")
+            await client.send_message(owner_username, f"👀 Вакансия:\n\n{event.message.message}")
 
 print("🚀 Бот запущен...")
 client.start()
