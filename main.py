@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.DEBUG)
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
 SESSION_STRING = os.getenv("SESSION_STRING")
-OWNER_USERNAME = os.getenv("OWNER_USERNAME")
+GROUP_ID = "@bknmoi"  # Используем ссылку на группу вместо ID
 
 # Настройки клиента
 client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
@@ -32,7 +32,7 @@ KEY_PATTERNS = [
 def message_matches(message_text: str) -> bool:
     message_text = message_text.lower()
     for pattern in KEY_PATTERNS:
-        if re.search(pattern, message_text):
+        if re.search(pattern, message_text, re.IGNORECASE):  # добавил флаг IGNORECASE
             return True
     return False
 
@@ -42,7 +42,8 @@ async def handler(event):
     try:
         message_text = event.message.message
         if message_matches(message_text):
-            await client.send_message(OWNER_USERNAME, f"🔎 Найдена вакансия:\n\n{message_text}")
+            # Отправляем сообщение в группу
+            await client.send_message(GROUP_ID, f"🔎 Найдена вакансия:\n\n{message_text}")
     except Exception as e:
         logging.error(f"Ошибка при обработке сообщения: {e}")
 
