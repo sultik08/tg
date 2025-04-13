@@ -2,12 +2,16 @@ import os
 import re
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
-from dotenv import load_dotenv  # Импортируем функцию для загрузки переменных окружения из .env
+from dotenv import load_dotenv
+import logging  # Для логирования
 
 # Загружаем переменные окружения из файла .env
 load_dotenv()
 
-# Теперь ты можешь получить переменные окружения через os.getenv
+# Настройки логирования
+logging.basicConfig(level=logging.DEBUG)  # Устанавливаем уровень логирования
+
+# Получаем переменные окружения через os.getenv
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
 SESSION_STRING = os.getenv("SESSION_STRING")
@@ -35,11 +39,12 @@ def message_matches(message_text: str) -> bool:
 # Обработчик новых сообщений
 @client.on(events.NewMessage(incoming=True))
 async def handler(event):
-    message_text = event.message.message
-
-    # Если сообщение соответствует фильтру, отправляем в личку или группу
-    if message_matches(message_text):
-        await client.send_message(OWNER_USERNAME, f"🔎 Найдена вакансия:\n\n{message_text}")
+    try:
+        message_text = event.message.message
+        if message_matches(message_text):
+            await client.send_message(OWNER_USERNAME, f"🔎 Найдена вакансия:\n\n{message_text}")
+    except Exception as e:
+        logging.error(f"Ошибка при обработке сообщения: {e}")
 
 # Запуск бота
 print("🚀 Бот запущен...")
