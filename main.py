@@ -3,13 +3,13 @@ import re
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 from dotenv import load_dotenv
-import logging  # Для логирования
+import logging
 
 # Загружаем переменные окружения из файла .env
 load_dotenv()
 
 # Настройки логирования
-logging.basicConfig(level=logging.DEBUG)  # Устанавливаем уровень логирования
+logging.basicConfig(level=logging.DEBUG)
 
 # Получаем переменные окружения через os.getenv
 API_ID = os.getenv("API_ID")
