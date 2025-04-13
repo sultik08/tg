@@ -1,23 +1,38 @@
+import os
+import re
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
-import os
+from config import API_ID, API_HASH, SESSION_STRING, OWNER_USERNAME
 
-api_id = int(os.environ.get("API_ID"))
-api_hash = os.environ.get("API_HASH")
-session_string = os.environ.get("SESSION_STRING")
-owner_username = os.environ.get("OWNER_USERNAME")
+# Настройки клиента
+client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
-client = TelegramClient(StringSession(session_string), api_id, api_hash)
+# Список регулярных выражений для фильтрации вакансий
+KEY_PATTERNS = [
+    r"(ищу|нужен|нужна|нужны|ищем|требуется).{0,40}(админ|в админку|в администрацию)",  # для админов
+    r"(ищу|нужен|нужна|нужны|ищем|требуется).{0,40}(ассистент|ассистента|помощник|помощника|хелпер)",  # для ассистентов и помощников
+    r"(ищу|нужен|нужна|нужны|ищем|требуется).{0,40}(на площадку|на съёмку|в команду|на проект)",  # для людей на проект
+    r"(продюсер|продюсеру).{0,40}(ассистент|помощник|админ)",  # для продюсерских ассистентов
+]
 
-KEYWORDS = ["ассистент", "съёмка", "работа в кино", "продюсер", "оплата", "дедлайн"]
+# Функция фильтрации сообщений
+def message_matches(message_text: str) -> bool:
+    message_text = message_text.lower()
+    for pattern in KEY_PATTERNS:
+        if re.search(pattern, message_text):
+            return True
+    return False
 
+# Обработчик новых сообщений
 @client.on(events.NewMessage(incoming=True))
 async def handler(event):
-    if event.is_group or event.is_channel:
-        msg = event.message.message.lower()
-        if any(keyword in msg for keyword in KEYWORDS):
-            await client.send_message(owner_username, f"👀 Вакансия:\n\n{event.message.message}")
+    message_text = event.message.message
 
+    # Если сообщение соответствует фильтру, отправляем в личку или группу
+    if message_matches(message_text):
+        await client.send_message(OWNER_USERNAME, f"🔎 Найдена вакансия:\n\n{message_text}")
+
+# Запуск бота
 print("🚀 Бот запущен...")
 client.start()
 client.run_until_disconnected()
