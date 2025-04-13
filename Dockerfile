@@ -1,17 +1,14 @@
 # Используем базовый образ Python
-FROM python:3.9-slim
+FROM python:3.8-slim
 
 # Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
-# Копируем файл зависимостей
-COPY requirements.txt .
+# Копируем все файлы из локальной директории в контейнер
+COPY . /app
 
-# Устанавливаем зависимости из requirements.txt
+# Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем все файлы проекта в контейнер
-COPY . .
-
-# Указываем команду для запуска бота
+# Запускаем бота
 CMD ["python", "main.py"]
