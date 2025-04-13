@@ -2,7 +2,16 @@ import os
 import re
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
-from config import API_ID, API_HASH, SESSION_STRING, OWNER_USERNAME
+from dotenv import load_dotenv  # Импортируем функцию для загрузки переменных окружения из .env
+
+# Загружаем переменные окружения из файла .env
+load_dotenv()
+
+# Теперь ты можешь получить переменные окружения через os.getenv
+API_ID = os.getenv("API_ID")
+API_HASH = os.getenv("API_HASH")
+SESSION_STRING = os.getenv("SESSION_STRING")
+OWNER_USERNAME = os.getenv("OWNER_USERNAME")
 
 # Настройки клиента
 client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
