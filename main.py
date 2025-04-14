@@ -5,8 +5,14 @@ from telethon.sessions import StringSession
 from dotenv import load_dotenv
 import logging
 
-# Загружаем переменные окружения из файла .env
-load_dotenv()
+from pathlib import Path
+load_dotenv(dotenv_path=Path('.') / '.env')  # Явно указываем путь
+
+# Смотрим, что реально загружается
+print("🔍 DEBUG:")
+print("API_ID:", repr(os.getenv("API_ID")))
+print("API_HASH:", repr(os.getenv("API_HASH")))
+print("SESSION_STRING:", repr(os.getenv("SESSION_STRING")))
 
 # Настройки логирования
 logging.basicConfig(level=logging.DEBUG)
