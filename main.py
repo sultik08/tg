@@ -1,3 +1,6 @@
+print(f"API_ID: {API_ID}")
+print(f"API_HASH: {API_HASH}")
+print(f"SESSION_STRING: {SESSION_STRING}")
 import os
 import re
 from telethon import TelegramClient, events
