@@ -1,6 +1,3 @@
-print(f"API_ID: {API_ID}")
-print(f"API_HASH: {API_HASH}")
-print(f"SESSION_STRING: {SESSION_STRING}")
 import os
 import re
 from telethon import TelegramClient, events
@@ -18,6 +15,16 @@ logging.basicConfig(level=logging.DEBUG)
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
 SESSION_STRING = os.getenv("SESSION_STRING")
+
+# Выводим переменные для проверки
+print(f"API_ID: {API_ID}")
+print(f"API_HASH: {API_HASH}")
+print(f"SESSION_STRING: {SESSION_STRING}")
+
+# Проверка на пустоту
+if not API_ID or not API_HASH or not SESSION_STRING:
+    raise ValueError("API_ID, API_HASH или SESSION_STRING пустые. Проверь файл .env")
+
 GROUP_ID = "@bknmoi"  # Используем ссылку на группу вместо ID
 
 # Настройки клиента
